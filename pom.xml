@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-aws-sdk</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>OpenTracing Instrumentation for AWS SDK</description>
@@ -13,7 +13,8 @@
         <url>http://github.com/opentracing-contrib/java-aws-sdk</url>
         <connection>scm:git:https://github.com/opentracing-contrib/java-aws-sdk.git</connection>
         <developerConnection>scm:git:https://github.com/opentracing-contrib/java-aws-sdk.git</developerConnection>
-    </scm>
+      <tag>0.0.1</tag>
+  </scm>
 
     <licenses>
         <license>
