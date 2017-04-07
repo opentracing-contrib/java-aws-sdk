@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-aws-sdk</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>OpenTracing Instrumentation for AWS SDK</description>
