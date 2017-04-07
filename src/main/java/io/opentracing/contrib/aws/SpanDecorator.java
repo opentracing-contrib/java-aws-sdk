@@ -11,19 +11,20 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpanDecorator {
+class SpanDecorator {
+    static final String COMPONENT_NAME = "java-aws-sdk";
 
-    public static void onRequest(Request request, Span span) {
-        Tags.COMPONENT.set(span, "java-aws");
+    static void onRequest(Request request, Span span) {
+        Tags.COMPONENT.set(span, COMPONENT_NAME);
         Tags.HTTP_METHOD.set(span, request.getHttpMethod().name());
         Tags.HTTP_URL.set(span, request.getEndpoint().toString());
     }
 
-    public static void onResponse(Response response, Span span) {
+    static void onResponse(Response response, Span span) {
         Tags.HTTP_STATUS.set(span, response.getHttpResponse().getStatusCode());
     }
 
-    public static void onError(Throwable throwable, Span span) {
+    static void onError(Throwable throwable, Span span) {
         Tags.ERROR.set(span, Boolean.TRUE);
         span.log(errorLogs(throwable));
     }

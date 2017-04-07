@@ -14,7 +14,9 @@ import io.opentracing.propagation.TextMapInjectAdapter;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 
-
+/**
+ * Tracing Request Handler
+ */
 public class TracingRequestHandler extends RequestHandler2 {
     private final HandlerContextKey<Span> contextKey = new HandlerContextKey<>("span");
     private final SpanContext parentContext; // for Async Client
@@ -33,6 +35,9 @@ public class TracingRequestHandler extends RequestHandler2 {
         this.parentContext = parentContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void beforeRequest(Request<?> request) {
         Tracer.SpanBuilder spanBuilder = GlobalTracer.get().buildSpan(request.getServiceName())
@@ -54,6 +59,9 @@ public class TracingRequestHandler extends RequestHandler2 {
         request.addHandlerContext(contextKey, span);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void afterResponse(Request<?> request, Response<?> response) {
         Span span = request.getHandlerContext(contextKey);
@@ -61,6 +69,9 @@ public class TracingRequestHandler extends RequestHandler2 {
         span.finish();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void afterError(Request<?> request, Response<?> response, Exception e) {
         Span span = request.getHandlerContext(contextKey);

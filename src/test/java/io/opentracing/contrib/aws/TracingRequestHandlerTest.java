@@ -107,7 +107,7 @@ public class TracingRequestHandlerTest {
     private void checkSpans(List<MockSpan> mockSpans) {
         for (MockSpan mockSpan : mockSpans) {
             assertEquals(Tags.SPAN_KIND_CLIENT, mockSpan.tags().get(Tags.SPAN_KIND.getKey()));
-            assertEquals("java-aws", mockSpan.tags().get(Tags.COMPONENT.getKey()));
+            assertEquals(SpanDecorator.COMPONENT_NAME, mockSpan.tags().get(Tags.COMPONENT.getKey()));
             assertEquals(0, mockSpan.generatedErrors().size());
             String operationName = mockSpan.operationName();
             assertTrue(operationName.equals("AmazonDynamoDBv2"));
