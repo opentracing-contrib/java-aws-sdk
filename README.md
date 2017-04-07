@@ -57,6 +57,6 @@ AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 ```
 
 
-[ci-img]: https://travis-ci.org/opentracing-contrib/aws-sdk.svg?branch=master
-[ci]: https://travis-ci.org/opentracing-contrib/aws-sdk
+[ci-img]: https://travis-ci.org/opentracing-contrib/java-aws-sdk.svg?branch=master
+[ci]: https://travis-ci.org/opentracing-contrib/java-aws-sdk
 
