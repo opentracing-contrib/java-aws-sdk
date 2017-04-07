@@ -7,6 +7,33 @@
     <artifactId>opentracing-aws-sdk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>OpenTracing Instrumentation for AWS SDK</description>
+    <url>https://github.com/opentracing-contrib/java-aws-sdk</url>
+
+    <scm>
+        <url>http://github.com/opentracing-contrib/java-aws-sdk</url>
+        <connection>scm:git:https://github.com/opentracing-contrib/java-aws-sdk.git</connection>
+        <developerConnection>scm:git:https://github.com/opentracing-contrib/java-aws-sdk.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>malafeev</id>
+            <name>Sergei Malafeev</name>
+            <email>sergeymalafeev@gmail.com</email>
+        </developer>
+    </developers>
+
     <properties>
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
