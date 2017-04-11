@@ -32,9 +32,15 @@
         </developer>
     </developers>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/opentracing-contrib/java-aws-sdk/issues</url>
+    </issueManagement>
+
     <properties>
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
         <opentracing.version>0.21.0</opentracing.version>
     </properties>
