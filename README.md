@@ -11,7 +11,7 @@ pom.xml
 <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-aws-sdk</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -39,19 +39,14 @@ You most likely need to exclude aws-java-sdk dependency and add own:
 
 ## Usage
 
-`DefaultSpanManager` is used to get active span
-
 ```java
 // Instantiate tracer
 Tracer tracer = ...
 
-// Register tracer with GlobalTracer
-GlobalTracer.register(tracer);
-
 // Build AWS client with TracingRequestHandler e.g.
 AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(Regions.US_WEST_2)
-                .withRequestHandlers(new TracingRequestHandler())
+                .withRequestHandlers(new TracingRequestHandler(tracer))
                 .build();
 
 ```
@@ -59,6 +54,6 @@ AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 
 [ci-img]: https://travis-ci.org/opentracing-contrib/java-aws-sdk.svg?branch=master
 [ci]: https://travis-ci.org/opentracing-contrib/java-aws-sdk
-[maven-img]: https://img.shields.io/maven-central/v/io.opentracing.contrib/opentracing-aws-sdk.svg?maxAge=2592000
+[maven-img]: https://img.shields.io/maven-central/v/io.opentracing.contrib/opentracing-aws-sdk.svg
 [maven]: http://search.maven.org/#search%7Cga%7C1%7Copentracing-aws-sdk
 

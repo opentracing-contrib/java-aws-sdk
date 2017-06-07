@@ -5,77 +5,82 @@ import com.amazonaws.Request;
 import com.amazonaws.Response;
 import com.amazonaws.handlers.HandlerContextKey;
 import com.amazonaws.handlers.RequestHandler2;
+import io.opentracing.ActiveSpan;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
-import io.opentracing.contrib.spanmanager.DefaultSpanManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMapInjectAdapter;
 import io.opentracing.tag.Tags;
-import io.opentracing.util.GlobalTracer;
 
 /**
  * Tracing Request Handler
  */
 public class TracingRequestHandler extends RequestHandler2 {
-    private final HandlerContextKey<Span> contextKey = new HandlerContextKey<>("span");
-    private final SpanContext parentContext; // for Async Client
 
-    public TracingRequestHandler() {
-        this.parentContext = null;
+  private final HandlerContextKey<Span> contextKey = new HandlerContextKey<>("span");
+  private final SpanContext parentContext; // for Async Client
+  private final Tracer tracer;
+
+  public TracingRequestHandler(Tracer tracer) {
+    this.parentContext = null;
+    this.tracer = tracer;
+  }
+
+  /**
+   * In case of Async Client:  beforeRequest runs in separate thread therefore we need to inject
+   * parent context to build chain
+   *
+   * @param parentContext parent context
+   */
+  public TracingRequestHandler(SpanContext parentContext, Tracer tracer) {
+    this.parentContext = parentContext;
+    this.tracer = tracer;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void beforeRequest(Request<?> request) {
+    Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServiceName())
+        .ignoreActiveSpan()
+        .withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT);
+
+    ActiveSpan parentSpan = tracer.activeSpan();
+
+    if (parentSpan != null) {
+      spanBuilder.asChildOf(parentSpan);
+    } else if (parentContext != null) {
+      spanBuilder.asChildOf(parentContext);
     }
 
-    /**
-     * In case of Async Client:  beforeRequest runs in separate thread therefore we need to inject
-     * parent context to build chain
-     *
-     * @param parentContext parent context
-     */
-    public TracingRequestHandler(SpanContext parentContext) {
-        this.parentContext = parentContext;
-    }
+    Span span = spanBuilder.startManual();
+    SpanDecorator.onRequest(request, span);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beforeRequest(Request<?> request) {
-        Tracer.SpanBuilder spanBuilder = GlobalTracer.get().buildSpan(request.getServiceName())
-                .withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT);
+    tracer.inject(span.context(), Format.Builtin.HTTP_HEADERS,
+        new TextMapInjectAdapter(request.getHeaders()));
 
-        Span parentSpan = DefaultSpanManager.getInstance().current().getSpan();
+    request.addHandlerContext(contextKey, span);
+  }
 
-        if (parentSpan != null) {
-            spanBuilder.asChildOf(parentSpan);
-        } else if (parentContext != null) {
-            spanBuilder.asChildOf(parentContext);
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void afterResponse(Request<?> request, Response<?> response) {
+    Span span = request.getHandlerContext(contextKey);
+    SpanDecorator.onResponse(response, span);
+    span.finish();
+  }
 
-        Span span = spanBuilder.start();
-        SpanDecorator.onRequest(request, span);
-
-        GlobalTracer.get().inject(span.context(), Format.Builtin.HTTP_HEADERS, new TextMapInjectAdapter(request.getHeaders()));
-
-        request.addHandlerContext(contextKey, span);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void afterResponse(Request<?> request, Response<?> response) {
-        Span span = request.getHandlerContext(contextKey);
-        SpanDecorator.onResponse(response, span);
-        span.finish();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void afterError(Request<?> request, Response<?> response, Exception e) {
-        Span span = request.getHandlerContext(contextKey);
-        SpanDecorator.onError(e, span);
-        span.finish();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void afterError(Request<?> request, Response<?> response, Exception e) {
+    Span span = request.getHandlerContext(contextKey);
+    SpanDecorator.onError(e, span);
+    span.finish();
+  }
 }

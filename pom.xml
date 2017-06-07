@@ -42,7 +42,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
-        <opentracing.version>0.21.0</opentracing.version>
+        <opentracing.version>0.30.0</opentracing.version>
     </properties>
 
     <dependencies>
@@ -53,15 +53,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-spanmanager</artifactId>
-            <version>0.0.3</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
-            <version>1.11.115</version>
+            <version>1.11.141</version>
         </dependency>
 
         <dependency>
