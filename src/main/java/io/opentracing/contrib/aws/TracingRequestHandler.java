@@ -5,7 +5,6 @@ import com.amazonaws.Request;
 import com.amazonaws.Response;
 import com.amazonaws.handlers.HandlerContextKey;
 import com.amazonaws.handlers.RequestHandler2;
-import io.opentracing.ActiveSpan;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
@@ -44,14 +43,9 @@ public class TracingRequestHandler extends RequestHandler2 {
   @Override
   public void beforeRequest(Request<?> request) {
     Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServiceName())
-        .ignoreActiveSpan()
         .withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT);
 
-    ActiveSpan parentSpan = tracer.activeSpan();
-
-    if (parentSpan != null) {
-      spanBuilder.asChildOf(parentSpan);
-    } else if (parentContext != null) {
+    if (parentContext != null) {
       spanBuilder.asChildOf(parentContext);
     }
 
