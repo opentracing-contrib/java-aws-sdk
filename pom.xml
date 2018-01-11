@@ -61,7 +61,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
-    <opentracing.version>0.30.0</opentracing.version>
+    <opentracing.version>0.31.0-RC2</opentracing.version>
   </properties>
 
   <dependencies>
