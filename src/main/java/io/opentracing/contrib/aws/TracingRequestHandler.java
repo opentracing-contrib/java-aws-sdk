@@ -62,7 +62,7 @@ public class TracingRequestHandler extends RequestHandler2 {
       spanBuilder.asChildOf(parentContext);
     }
 
-    Span span = spanBuilder.startManual();
+    Span span = spanBuilder.start();
     SpanDecorator.onRequest(request, span);
 
     tracer.inject(span.context(), Format.Builtin.HTTP_HEADERS,
