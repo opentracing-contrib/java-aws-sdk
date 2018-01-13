@@ -18,7 +18,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.opentracing.contrib</groupId>
   <artifactId>opentracing-aws-sdk</artifactId>
-  <version>0.0.3-RC2-SNAPSHOT</version>
+  <version>0.0.3-SNAPSHOT</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>OpenTracing Instrumentation for AWS SDK</description>
@@ -59,7 +59,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
-    <opentracing.version>0.31.0-RC2</opentracing.version>
+    <opentracing.version>0.31.0</opentracing.version>
   </properties>
 
   <dependencies>
