@@ -11,7 +11,7 @@ pom.xml
 <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-aws-sdk</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
@@ -20,7 +20,7 @@ You most likely need to exclude aws-java-sdk dependency and add own:
 <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-aws-sdk</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <exclusions>
         <exclusion>
              <groupId>com.amazonaws</groupId>

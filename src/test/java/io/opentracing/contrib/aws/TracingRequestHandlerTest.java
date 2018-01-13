@@ -35,11 +35,11 @@ import com.amazonaws.services.dynamodbv2.model.CreateTableResult;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
-import io.opentracing.ActiveSpan;
+import io.opentracing.Scope;
 import io.opentracing.mock.MockSpan;
 import io.opentracing.mock.MockTracer;
 import io.opentracing.tag.Tags;
-import io.opentracing.util.ThreadLocalActiveSpanSource;
+import io.opentracing.util.ThreadLocalScopeManager;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +50,7 @@ import org.junit.Test;
 
 public class TracingRequestHandlerTest {
 
-  private static final MockTracer mockTracer = new MockTracer(new ThreadLocalActiveSpanSource(),
+  private static final MockTracer mockTracer = new MockTracer(new ThreadLocalScopeManager(),
       MockTracer.Propagator.TEXT_MAP);
   private DynamoDBProxyServer server;
 
@@ -88,7 +88,7 @@ public class TracingRequestHandlerTest {
   public void two_requests_with_parent() {
     AmazonDynamoDB dbClient = buildClient();
 
-    try (ActiveSpan parent = mockTracer.buildSpan("parent-sync").startActive()) {
+    try (Scope parent = mockTracer.buildSpan("parent-sync").startActive(true)) {
       createTable(dbClient, "with-parent-1");
       createTable(dbClient, "with-parent-2");
     }
@@ -118,7 +118,7 @@ public class TracingRequestHandlerTest {
   public void async_requests_with_parent() throws Exception {
     AmazonDynamoDBAsync dbClient = buildAsyncClient();
 
-    try (ActiveSpan parent = mockTracer.buildSpan("parent-async").startActive()) {
+    try (Scope parent = mockTracer.buildSpan("parent-async").startActive(true)) {
       Future<CreateTableResult> createTableResultFuture = createTableAsync(dbClient,
           "with-async-parent-1");
       Future<CreateTableResult> createTableResultFuture2 = createTableAsync(dbClient,
