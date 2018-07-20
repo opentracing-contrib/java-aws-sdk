@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -70,7 +69,22 @@ public class TracingRequestHandlerTest {
   }
 
   @Test
-  public void two_requests() throws Exception {
+  public void with_error() {
+    AmazonDynamoDB dbClient = buildClient();
+    createTable(dbClient, "table-1");
+    createTable(dbClient, "table-1");
+
+    List<MockSpan> spans = mockTracer.finishedSpans();
+    assertEquals(2, spans.size());
+
+    assertEquals(1, spans.get(1).logEntries().size());
+    assertEquals(true, spans.get(1).tags().get(Tags.ERROR.getKey()));
+
+    assertNull(mockTracer.activeSpan());
+  }
+
+  @Test
+  public void two_requests() {
     AmazonDynamoDB dbClient = buildClient();
     createTable(dbClient, "twoRequests-1");
     createTable(dbClient, "twoRequests-2");
@@ -88,7 +102,7 @@ public class TracingRequestHandlerTest {
   public void two_requests_with_parent() {
     AmazonDynamoDB dbClient = buildClient();
 
-    try (Scope parent = mockTracer.buildSpan("parent-sync").startActive(true)) {
+    try (Scope ignore = mockTracer.buildSpan("parent-sync").startActive(true)) {
       createTable(dbClient, "with-parent-1");
       createTable(dbClient, "with-parent-2");
     }
@@ -118,7 +132,7 @@ public class TracingRequestHandlerTest {
   public void async_requests_with_parent() throws Exception {
     AmazonDynamoDBAsync dbClient = buildAsyncClient();
 
-    try (Scope parent = mockTracer.buildSpan("parent-async").startActive(true)) {
+    try (Scope ignore = mockTracer.buildSpan("parent-async").startActive(true)) {
       Future<CreateTableResult> createTableResultFuture = createTableAsync(dbClient,
           "with-async-parent-1");
       Future<CreateTableResult> createTableResultFuture2 = createTableAsync(dbClient,
@@ -172,9 +186,11 @@ public class TracingRequestHandlerTest {
     for (MockSpan mockSpan : mockSpans) {
       assertEquals(Tags.SPAN_KIND_CLIENT, mockSpan.tags().get(Tags.SPAN_KIND.getKey()));
       assertEquals(SpanDecorator.COMPONENT_NAME, mockSpan.tags().get(Tags.COMPONENT.getKey()));
+      assertNull(mockSpan.tags().get(Tags.ERROR.getKey()));
+      assertEquals(0, mockSpan.logEntries().size());
       assertEquals(0, mockSpan.generatedErrors().size());
       String operationName = mockSpan.operationName();
-      assertTrue(operationName.equals("AmazonDynamoDBv2"));
+      assertEquals("AmazonDynamoDBv2", operationName);
     }
   }
 
