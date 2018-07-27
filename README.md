@@ -52,6 +52,10 @@ AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 ```
 
 
+## License
+
+[Apache 2.0 License](./LICENSE).
+
 [ci-img]: https://travis-ci.org/opentracing-contrib/java-aws-sdk.svg?branch=master
 [ci]: https://travis-ci.org/opentracing-contrib/java-aws-sdk
 [cov-img]: https://coveralls.io/repos/github/opentracing-contrib/java-aws-sdk/badge.svg?branch=master
