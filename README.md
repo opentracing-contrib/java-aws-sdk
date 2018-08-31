@@ -43,6 +43,9 @@ You most likely need to exclude aws-java-sdk dependency and add own:
 // Instantiate tracer
 Tracer tracer = ...
 
+// Optionally register tracer with GlobalTracer
+GlobalTracer.register(tracer);
+
 // Build AWS client with TracingRequestHandler e.g.
 AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(Regions.US_WEST_2)
