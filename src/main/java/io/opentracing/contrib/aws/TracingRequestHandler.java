@@ -70,7 +70,7 @@ public class TracingRequestHandler extends RequestHandler2 {
    */
   @Override
   public void beforeRequest(Request<?> request) {
-    Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServiceName())
+    Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getOriginalRequest().getClass().getSimpleName())
         .withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT);
 
     if (parentContext != null) {
