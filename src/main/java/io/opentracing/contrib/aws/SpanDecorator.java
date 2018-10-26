@@ -31,7 +31,7 @@ class SpanDecorator {
     Tags.COMPONENT.set(span, COMPONENT_NAME);
     Tags.HTTP_METHOD.set(span, request.getHttpMethod().name());
     Tags.HTTP_URL.set(span, request.getEndpoint().toString());
-    span.setTag("original_request", request.getOriginalRequest().getClass().getSimpleName());
+    Tags.PEER_SERVICE.set(span, request.getServiceName());
   }
 
   static void onResponse(Response response, Span span) {

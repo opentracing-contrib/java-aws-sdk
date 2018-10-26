@@ -189,8 +189,9 @@ public class TracingRequestHandlerTest {
       assertNull(mockSpan.tags().get(Tags.ERROR.getKey()));
       assertEquals(0, mockSpan.logEntries().size());
       assertEquals(0, mockSpan.generatedErrors().size());
+      assertEquals("AmazonDynamoDBv2", mockSpan.tags().get(Tags.PEER_SERVICE.getKey()));
       String operationName = mockSpan.operationName();
-      assertEquals("AmazonDynamoDBv2", operationName);
+      assertEquals("CreateTableRequest", operationName);
     }
   }
 
