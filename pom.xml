@@ -74,7 +74,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk</artifactId>
-      <version>1.11.399</version>
+      <version>1.11.436</version>
     </dependency>
 
     <dependency>
@@ -94,7 +94,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>DynamoDBLocal</artifactId>
-      <version>1.11.86</version>
+      <version>1.11.119</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
