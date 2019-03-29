@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 The OpenTracing Authors
+ * Copyright 2017-2019 The OpenTracing Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import io.opentracing.propagation.TextMapInjectAdapter;
+import io.opentracing.propagation.TextMapAdapter;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 
@@ -70,7 +70,8 @@ public class TracingRequestHandler extends RequestHandler2 {
    */
   @Override
   public void beforeRequest(Request<?> request) {
-    Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getOriginalRequest().getClass().getSimpleName())
+    Tracer.SpanBuilder spanBuilder = tracer
+        .buildSpan(request.getOriginalRequest().getClass().getSimpleName())
         .withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT);
 
     if (parentContext != null) {
@@ -81,7 +82,7 @@ public class TracingRequestHandler extends RequestHandler2 {
     SpanDecorator.onRequest(request, span);
 
     tracer.inject(span.context(), Format.Builtin.HTTP_HEADERS,
-        new TextMapInjectAdapter(request.getHeaders()));
+        new TextMapAdapter(request.getHeaders()));
 
     request.addHandlerContext(contextKey, span);
   }
