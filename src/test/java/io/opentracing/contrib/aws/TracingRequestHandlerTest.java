@@ -15,7 +15,6 @@ package io.opentracing.contrib.aws;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -102,16 +101,15 @@ public class TracingRequestHandlerTest {
   public void two_requests_with_parent() {
     AmazonDynamoDB dbClient = buildClient();
 
-    try (Scope ignore = mockTracer.buildSpan("parent-sync").startActive(true)) {
+    final MockSpan parent = mockTracer.buildSpan("parent-sync").start();
+    try (Scope ignore = mockTracer.activateSpan(parent)) {
       createTable(dbClient, "with-parent-1");
       createTable(dbClient, "with-parent-2");
     }
+    parent.finish();
 
     List<MockSpan> spans = mockTracer.finishedSpans();
     assertEquals(3, spans.size());
-
-    MockSpan parent = getByOperationName(spans, "parent-sync");
-    assertNotNull(parent);
 
     for (MockSpan span : spans) {
       if (parent.operationName().equals(span.operationName())) {
@@ -132,7 +130,8 @@ public class TracingRequestHandlerTest {
   public void async_requests_with_parent() throws Exception {
     AmazonDynamoDBAsync dbClient = buildAsyncClient();
 
-    try (Scope ignore = mockTracer.buildSpan("parent-async").startActive(true)) {
+    final MockSpan parent = mockTracer.buildSpan("parent-sync").start();
+    try (Scope ignore = mockTracer.activateSpan(parent)) {
       Future<CreateTableResult> createTableResultFuture = createTableAsync(dbClient,
           "with-async-parent-1");
       Future<CreateTableResult> createTableResultFuture2 = createTableAsync(dbClient,
@@ -143,12 +142,10 @@ public class TracingRequestHandlerTest {
 
       createTableAsync(dbClient, "with-async-parent-3").get(10, TimeUnit.SECONDS);
     }
+    parent.finish();
 
     List<MockSpan> spans = mockTracer.finishedSpans();
     assertEquals(4, spans.size());
-
-    MockSpan parent = getByOperationName(spans, "parent-async");
-    assertNotNull(parent);
 
     for (MockSpan span : spans) {
       if (parent.operationName().equals(span.operationName())) {
@@ -267,14 +264,5 @@ public class TracingRequestHandlerTest {
 
           }
         });
-  }
-
-  private MockSpan getByOperationName(List<MockSpan> spans, String operationName) {
-    for (MockSpan span : spans) {
-      if (operationName.equals(span.operationName())) {
-        return span;
-      }
-    }
-    return null;
   }
 }
