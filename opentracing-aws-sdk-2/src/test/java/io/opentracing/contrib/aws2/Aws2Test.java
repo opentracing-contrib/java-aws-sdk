@@ -43,7 +43,6 @@ import software.amazon.awssdk.services.dynamodb.model.CreateTableResponse;
 import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
 import software.amazon.awssdk.services.dynamodb.model.KeyType;
 import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
-import software.amazon.awssdk.services.s3.S3Client;
 
 public class Aws2Test {
   private static final MockTracer tracer = new MockTracer();
@@ -95,10 +94,6 @@ public class Aws2Test {
   }
 
   private static DynamoDbClient buildClient() {
-    S3Client s3Client = S3Client.builder().overrideConfiguration(
-        builder -> builder.addExecutionInterceptor(new TracingExecutionInterceptor(tracer)))
-        .build();
-
     final AwsSessionCredentials awsCreds = AwsSessionCredentials
         .create("access_key_id", "secret_key_id", "session_token");
     return DynamoDbClient
