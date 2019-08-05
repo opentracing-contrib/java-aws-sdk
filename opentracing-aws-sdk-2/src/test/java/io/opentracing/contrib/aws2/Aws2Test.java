@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNull;
 
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
+import io.opentracing.Scope;
 import io.opentracing.mock.MockSpan;
 import io.opentracing.mock.MockTracer;
 import java.net.URI;
@@ -72,6 +73,33 @@ public class Aws2Test {
     final List<MockSpan> spans = tracer.finishedSpans();
     assertEquals(1, spans.size());
     assertEquals("CreateTableRequest", spans.get(0).operationName());
+
+    assertNull(tracer.activeSpan());
+  }
+
+  @Test
+  public void twoRequestsWithParent() {
+    final DynamoDbClient dbClient = buildClient();
+
+    final MockSpan parent = tracer.buildSpan("parent-sync").start();
+    try (Scope ignore = tracer.activateSpan(parent)) {
+      createTable(dbClient,
+          "with-parent-1-" + ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE));
+      createTable(dbClient,
+          "with-parent-2-" + ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE));
+    }
+    parent.finish();
+
+    List<MockSpan> spans = tracer.finishedSpans();
+    assertEquals(3, spans.size());
+
+    for (MockSpan span : spans) {
+      if (parent.operationName().equals(span.operationName())) {
+        continue;
+      }
+      assertEquals(parent.context().traceId(), span.context().traceId());
+      assertEquals(parent.context().spanId(), span.parentId());
+    }
 
     assertNull(tracer.activeSpan());
   }
