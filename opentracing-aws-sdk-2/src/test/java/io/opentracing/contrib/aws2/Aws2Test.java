@@ -52,6 +52,7 @@ public class Aws2Test {
   @Before
   public void before() throws Exception {
     System.getProperties().setProperty("sqlite4java.library.path", "src/test/resources/libs");
+    System.getProperties().setProperty("aws.region", "us-west-2");
     tracer.reset();
 
     final String[] localArgs = {"-inMemory", "-port", "8000"};
