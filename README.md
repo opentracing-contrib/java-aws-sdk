@@ -59,6 +59,6 @@ S3Client s3Client = S3Client.builder().overrideConfiguration(
 [ci]: https://travis-ci.org/opentracing-contrib/java-aws-sdk
 [cov-img]: https://coveralls.io/repos/github/opentracing-contrib/java-aws-sdk/badge.svg?branch=master
 [cov]: https://coveralls.io/github/opentracing-contrib/java-aws-sdk?branch=master
-[maven-img]: https://img.shields.io/maven-central/v/io.opentracing.contrib/opentracing-aws-sdk.svg
-[maven]: http://search.maven.org/#search%7Cga%7C1%7Copentracing-aws-sdk
+[maven-img]: https://img.shields.io/maven-central/v/io.opentracing.contrib/opentracing-aws-sdk-1.svg
+[maven]: http://search.maven.org/#search%7Cga%7C1%7Copentracing-aws-sdk-1
 
