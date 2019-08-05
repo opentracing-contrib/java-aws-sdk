@@ -10,7 +10,7 @@ pom.xml
 ```xml
 <dependency>
     <groupId>io.opentracing.contrib</groupId>
-    <artifactId>opentracing-aws-sdk</artifactId>
+    <artifactId>opentracing-aws-sdk-1</artifactId>
     <version>VERSION</version>
 </dependency>
 ```
