@@ -24,7 +24,6 @@ import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMapAdapter;
 import io.opentracing.tag.Tags;
-import io.opentracing.util.GlobalTracer;
 
 /**
  * Tracing Request Handler
@@ -41,13 +40,6 @@ public class TracingRequestHandler extends RequestHandler2 {
   }
 
   /**
-   * GlobalTracer is used to get tracer
-   */
-  public TracingRequestHandler() {
-    this(GlobalTracer.get());
-  }
-
-  /**
    * In case of Async Client:  beforeRequest runs in separate thread therefore we need to inject
    * parent context to build chain
    *
@@ -56,13 +48,6 @@ public class TracingRequestHandler extends RequestHandler2 {
   public TracingRequestHandler(SpanContext parentContext, Tracer tracer) {
     this.parentContext = parentContext;
     this.tracer = tracer;
-  }
-
-  /**
-   * GlobalTracer is used to get tracer
-   */
-  public TracingRequestHandler(SpanContext parentContext) {
-    this(parentContext, GlobalTracer.get());
   }
 
   /**
