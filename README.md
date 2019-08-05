@@ -5,7 +5,7 @@ OpenTracing instrumentation for AWS clients.
 
 ## Installation
 
-### Maven
+### AWS SDK 1
 pom.xml
 ```xml
 <dependency>
@@ -15,26 +15,14 @@ pom.xml
 </dependency>
 ```
 
-You most likely need to exclude aws-java-sdk dependency and add own:
+### AWS SDK 2
+pom.xml
 ```xml
 <dependency>
     <groupId>io.opentracing.contrib</groupId>
-    <artifactId>opentracing-aws-sdk</artifactId>
+    <artifactId>opentracing-aws-sdk-2</artifactId>
     <version>VERSION</version>
-    <exclusions>
-        <exclusion>
-             <groupId>com.amazonaws</groupId>
-             <artifactId>aws-java-sdk</artifactId>
-        </exclusion>
-    </exclusions>
 </dependency>
-
-<dependency>
-     <groupId>com.amazonaws</groupId>
-     <artifactId>aws-java-sdk</artifactId>
-    <version>{required version}</version>
-</dependency>
-
 ```
 
 ## Usage
@@ -42,10 +30,11 @@ You most likely need to exclude aws-java-sdk dependency and add own:
 ```java
 // Instantiate tracer
 Tracer tracer = ...
+```
 
-// Optionally register tracer with GlobalTracer
-GlobalTracer.register(tracer);
+### AWS SDK 1
 
+```java
 // Build AWS client with TracingRequestHandler e.g.
 AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(Regions.US_WEST_2)
@@ -54,6 +43,13 @@ AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 
 ```
 
+### AWS SDK 2
+```java
+// Build AWS client with TracingExecutionInterceptor e.g.
+S3Client s3Client = S3Client.builder().overrideConfiguration(
+        builder -> builder.addExecutionInterceptor(new TracingExecutionInterceptor(tracer)))
+        .build();
+```
 
 ## License
 
