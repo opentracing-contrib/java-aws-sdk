@@ -29,8 +29,8 @@
   <dependencies>
     <dependency>
       <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk</artifactId>
-      <version>1.11.600</version>
+      <artifactId>aws-java-sdk-core</artifactId>
+      <version>1.11.619</version>
     </dependency>
 
     <dependency>
@@ -59,10 +59,7 @@
           <groupId>com.amazonaws</groupId>
           <artifactId>aws-java-sdk-core</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>com.amazonaws</groupId>
-          <artifactId>aws-java-sdk-dynamodb</artifactId>
-        </exclusion>
+      
       </exclusions>
     </dependency>
   </dependencies>

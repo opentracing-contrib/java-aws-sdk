@@ -29,8 +29,8 @@
   <dependencies>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
-      <artifactId>aws-sdk-java</artifactId>
-      <version>2.7.15</version>
+      <artifactId>sdk-core</artifactId>
+      <version>2.7.32</version>
     </dependency>
 
     <dependency>
@@ -57,6 +57,12 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>DynamoDBLocal</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>dynamodb</artifactId>
+      <version>2.7.32</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
