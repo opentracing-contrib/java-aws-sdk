@@ -31,6 +31,7 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-core</artifactId>
       <version>1.11.619</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -59,7 +60,7 @@
           <groupId>com.amazonaws</groupId>
           <artifactId>aws-java-sdk-core</artifactId>
         </exclusion>
-      
+
       </exclusions>
     </dependency>
   </dependencies>
