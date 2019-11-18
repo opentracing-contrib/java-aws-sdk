@@ -59,20 +59,20 @@ check_travis_branch_equals_travis_tag() {
 }
 
 check_release_tag() {
-    tag="${TRAVIS_TAG}"
-    if [[ "$tag" =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\-RC[[:digit:]]+)?$ ]]; then
-        echo "Build started by version tag $tag. During the release process tags like this"
-        echo "are created by the 'release' Maven plugin. Nothing to do here."
-        exit 0
-    elif [[ ! "$tag" =~ ^release-[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\-RC[[:digit:]]+)?$ ]]; then
-        echo "You must specify a tag of the format 'release-0.0.0' or 'release-0.0.0-RC0' to release this project."
-        echo "The provided tag ${tag} doesn't match that. Aborting."
-        exit 1
-    fi
+  tag="${TRAVIS_TAG}"
+  if [[ "$tag" =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\-RC[[:digit:]]+)?$ ]]; then
+    echo "Build started by version tag $tag. During the release process tags like this"
+    echo "are created by the 'release' Maven plugin. Nothing to do here."
+    exit 0
+  elif [[ ! "$tag" =~ ^release-[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\-RC[[:digit:]]+)?$ ]]; then
+    echo "You must specify a tag of the format 'release-0.0.0' or 'release-0.0.0-RC0' to release this project."
+    echo "The provided tag ${tag} doesn't match that. Aborting."
+    exit 1
+  fi
 }
 
 is_release_commit() {
-  project_version=$(./mvnw help:evaluate -N -Dexpression=project.version|sed -n '/^[0-9]/p')
+  project_version=$(./mvnw help:evaluate -N -Dexpression=project.version | sed -n '/^[0-9]/p')
   if [[ "$project_version" =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(\-RC[[:digit:]]+)?$ ]]; then
     echo "Build started by release commit $project_version. Will synchronize to maven central."
     return 0
@@ -82,7 +82,7 @@ is_release_commit() {
 }
 
 release_version() {
-    echo "${TRAVIS_TAG}" | sed 's/^release-//'
+  echo "${TRAVIS_TAG}" | sed 's/^release-//'
 }
 
 safe_checkout_remote_branch() {
@@ -92,7 +92,7 @@ safe_checkout_remote_branch() {
   # so we verify that the remote branch is where our tag is.
   checkoutBranch=master
   if [[ "${TRAVIS_BRANCH}" =~ ^release-[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\-RC[[:digit:]]+$ ]]; then
-    checkoutBranch=v`release_version | sed 's/-RC[[:digit:]]\+//'`
+    checkoutBranch=v$(release_version | sed 's/-RC[[:digit:]]\+//')
   fi
   git checkout -B "${checkoutBranch}"
   git fetch origin "${checkoutBranch}":origin/"${checkoutBranch}"
