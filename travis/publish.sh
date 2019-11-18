@@ -123,11 +123,6 @@ if is_pull_request; then
 elif is_travis_branch_master_or_release; then
   ./mvnw --batch-mode -s ./.settings.xml -Prelease -nsu -DskipTests deploy
 
-  # If the deployment succeeded, sync it to Maven Central. Note: this needs to be done once per project, not module, hence -N
-  if is_release_commit; then
-    ./mvnw --batch-mode -s ./.settings.xml -nsu -N io.zipkin.centralsync-maven-plugin:centralsync-maven-plugin:sync
-  fi
-
 # If we are on a release tag, the following will update any version references and push a version tag for deployment.
 elif build_started_by_tag; then
   safe_checkout_remote_branch
