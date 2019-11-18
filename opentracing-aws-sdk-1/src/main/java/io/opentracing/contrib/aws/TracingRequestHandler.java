@@ -21,8 +21,6 @@ import com.amazonaws.handlers.RequestHandler2;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
-import io.opentracing.propagation.Format;
-import io.opentracing.propagation.TextMapAdapter;
 import io.opentracing.tag.Tags;
 
 /**
@@ -65,9 +63,6 @@ public class TracingRequestHandler extends RequestHandler2 {
 
     Span span = spanBuilder.start();
     SpanDecorator.onRequest(request, span);
-
-    tracer.inject(span.context(), Format.Builtin.HTTP_HEADERS,
-        new TextMapAdapter(request.getHeaders()));
 
     request.addHandlerContext(contextKey, span);
   }
