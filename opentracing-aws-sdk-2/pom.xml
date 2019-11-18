@@ -28,11 +28,15 @@
   <name>OpenTracing Instrumentation for AWS SDK 2</name>
   <description>OpenTracing Instrumentation for AWS SDK 2</description>
 
+  <properties>
+    <aws.version>2.10.18</aws.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>sdk-core</artifactId>
-      <version>2.7.32</version>
+      <version>${aws.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -65,7 +69,7 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>dynamodb</artifactId>
-      <version>2.7.32</version>
+      <version>${aws.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
