@@ -27,7 +27,7 @@
   <description>OpenTracing Instrumentation for AWS SDK 2</description>
 
   <properties>
-    <aws.version>2.10.18</aws.version>
+    <aws.version>2.10.71</aws.version>
   </properties>
 
   <dependencies>
